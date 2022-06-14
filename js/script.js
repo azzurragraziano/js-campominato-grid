@@ -36,7 +36,7 @@ Al termine della partita il software deve comunicare il punteggio, cioè il nume
 *********************/
 // [1] chiediamo (con un prompt) il livello desiderato dall'utente
 const userLevel = parseInt(prompt('dimmi quale livello preferisci (1-2-3)'))
-console.log(userLevel);
+// console.log(userLevel);
 
 //[2] SE sceglie il livello 
     // 1 : il range di numeri possibili è tra 1 e 100
@@ -54,21 +54,58 @@ switch (userLevel) {
         levelMaxRange = 49;
         break;
 }
-console.log(levelMaxRange);
+// console.log(levelMaxRange);
 
 // [3] genero 16 numeri casuali (senza duplicati), che rappresenteranno le bombe, per un range che va da 1 a levelMaxRange (100-81-49)
 const totalNumberOfBombs = 16;
 const bombs = generateBombs(totalNumberOfBombs, 1, levelMaxRange);
-console.log('bombe', bombs);
+// console.log('bombe', bombs);
 
 // [4] mi calcolo il numero massimo di tentativi che l'utente può fare: maxAttempts = levelMaxRange - bombs (numero di bombe, cioé 16)
 
 const maxAttempts = levelMaxRange - totalNumberOfBombs;
 
 /******************** 
+*    FASE LOGICA    *
+*********************/
+// FINCHE' il gioco non finisce
+    // [1] chiediamo (con dei prompt) all'utente il numero che desidera inserire
+    // [2.1] SE il numero è presente in quelli generati casualmente (è una bomba) -> l'utente perde -> faccio finire il gioco + alert 'hai perso' + punteggio
+    // [2.2] ALTRIMENTI 
+        // SE (il numero non è presente in quelli già dati dall'utente) lo pusho nell'array userNumbers
+        // SE l'utente ha raggiunto il numero massimo di tentativi possibili -> l'utente vince -> faccio finire il gioco + alert 'hai vinto' + punteggio
+
+const userNumbers = [];
+let gaming = true;
+while (gaming) {
+    // [1] chiediamo (con dei prompt) all'utente il numero che desidera inserire
+    const userNumber = parseInt(prompt('dimmi un numero'));
+
+    // [2.1] SE il numero è presente in quelli generati casualmente (è una bomba) -> l'utente perde -> faccio finire il gioco + alert 'hai perso' + punteggio
+    if (bombs.includes(userNumber)) {
+        gaming = false;
+        alert('hai perso');
+        alert('punteggio: ' + userNumbers.length)
+        // console.log('userNumbers', userNumbers)
+    } /* [2.2] ALTRIMENTI */ else {
+        // SE (il numero non è presente in quelli già dati dall'utente) lo pusho nell'array userNumbers
+        if (!userNumbers.includes(userNumber)) {
+            userNumbers.push(userNumber);
+        }
+        // console.log(userNumbers);
+
+        // SE l'utente ha raggiunto il numero massimo di tentativi possibili -> l'utente vince -> faccio finire il gioco + alert 'hai vinto' + punteggio
+        if (userNumbers.length === maxAttempts) {
+            gaming = false;
+            alert('hai vinto');
+            alert('punteggio: ' + userNumbers.length)
+        }
+    }
+}
+
+/******************** 
 *     FUNCTIONS     *
 *********************/
-
 /* FUNZIONE PER GENERARE NUMERO RANDOM */
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
@@ -83,9 +120,9 @@ function getRndInteger(min, max) {
 
 function generateBombs (numberOfBombs, rangeMin, rangeMax) {
 
-    console.log('numero elementi dell\'array', numberOfBombs);
-    console.log('range minimo', rangeMin);
-    console.log('range massimo', rangeMax);
+    // console.log('numero elementi dell\'array', numberOfBombs);
+    // console.log('range minimo', rangeMin);
+    // console.log('range massimo', rangeMax);
 
     const randomNumberBombs = [];
 
